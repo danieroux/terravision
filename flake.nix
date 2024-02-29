@@ -13,7 +13,8 @@
   outputs = { self, nixpkgs, flake-utils, poetry2nix }:
     flake-utils.lib.eachDefaultSystem (system:
       let
-        pkgs = nixpkgs.legacyPackages.${system};
+        #  Need the unfree for terraform
+        pkgs = import nixpkgs { inherit system; config.allowUnfree = true; };
         inherit (poetry2nix.lib.mkPoetry2Nix { inherit pkgs; }) mkPoetryApplication;
       in
       {
@@ -22,13 +23,14 @@
         packages = {
           terravision = mkPoetryApplication {
             projectDir = self;
+            packages = [ pkgs.poetry pkgs.graphviz pkgs.terraform ];
           };
           default = self.packages.${system}.terravision;
         };
 
         devShells.default = pkgs.mkShell {
           inputsFrom = [ self.packages.${system}.terravision ];
-          packages = [ pkgs.poetry ];
+          packages = [ pkgs.poetry pkgs.graphviz pkgs.terraform ];
         };
       });
 }
