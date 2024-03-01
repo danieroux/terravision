@@ -32,23 +32,23 @@
 
           # https://discourse.nixos.org/t/pip-not-found-by-python39-in-nix-shell/24017/3
           terravision = python3.pkgs.buildPythonPackage rec {
-            format = "pyproject";
+            format = "poetry";
             name = "terravision";
             src = ./.;
             doCheck = false;
             nativeBuildInputs = with python3.pkgs; [
-              setuptools
+              poetry-core setuptools
             ];
             propagatedBuildInputs = [
               pkgs.git
               pkgs.terraform
               pkgs.graphviz
+              packages.python-hcl2
               python3.pkgs.gitpython
               python3.pkgs.clickclick
               python3.pkgs.graphviz
               python3.pkgs.requests
               python3.pkgs.tqdm
-              packages.python-hcl2
               python3.pkgs.numpy
               python3.pkgs.debugpy
               python3.pkgs.ipaddr
