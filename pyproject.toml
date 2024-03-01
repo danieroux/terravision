@@ -5,9 +5,10 @@ description = "Terraform Architecture Visualizer"
 authors = []
 readme = 'README.md'
 exclude = []
-include = ["terravision", "resource_images", "hcl2"]
+include = ["resource_images", "hcl2"]
 packages = [
     { include = "resource_classes", from = "." },
+    { include = "terravision", from = "." },
     { include = "modules", from = "." },
 ]
 
@@ -18,7 +19,9 @@ graphviz = ">=0.20.1"
 requests = ">=2.28.2"
 setuptools = ">=65.6.3"
 tqdm = ">=4.65.0"
-python-hcl2 = ">=0.0.0"
+# python-hcl2 = ">=4.3.2"
+# FIXME
+python-hcl2 = "0.0.0"
 pyinstaller = ">=5.8.0"
 python = ">=3.9,<3.12"
 PyYAML = ">=6.0"
@@ -36,6 +39,9 @@ isort = "^5.12.0"
 
 [tool.isort]
 skip = ["drawing.py"]
+
+[tool.poetry.scripts]
+terravision = "terravision.cli:main"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

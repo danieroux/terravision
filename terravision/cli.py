@@ -260,11 +260,13 @@ def graphdata(
         )
     click.echo(f"\nCompleted!")
 
-
-if __name__ == "__main__":
+def main():
     cli(
         default_map={
             "draw": {"avl_classes": dir()},
             "graphlist": {"avl_classes": dir()},
         }
     )
+
+if __name__ == "__main__":
+    main()
