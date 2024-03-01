@@ -4,12 +4,17 @@
   inputs = {
     flake-utils.url = "github:numtide/flake-utils";
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+        poetry2nix = {
+          url = "github:danieroux/poetry2nix";
+          inputs.nixpkgs.follows = "nixpkgs";
+        };
   };
 
   outputs = { self, nixpkgs, flake-utils, poetry2nix }:
     flake-utils.lib.eachDefaultSystem (system:
       let
-        inherit (pkgs) python3;
+       inherit (pkgs) python3;
+        inherit (poetry2nix.lib.mkPoetry2Nix { inherit pkgs; }) mkPoetryApplication;
         #  Need the unfree for terraform
         pkgs = import nixpkgs { inherit system; config.allowUnfree = true; };
       in
@@ -30,30 +35,8 @@
             pythonOlder = python3.pkgs.pythonOlder;
           };
 
-          # https://discourse.nixos.org/t/pip-not-found-by-python39-in-nix-shell/24017/3
-          terravision = python3.pkgs.buildPythonPackage rec {
-            format = "poetry";
-            name = "terravision";
-            src = ./.;
-            doCheck = false;
-            nativeBuildInputs = with python3.pkgs; [
-              poetry-core setuptools
-            ];
-            propagatedBuildInputs = [
-              pkgs.git
-              pkgs.terraform
-              pkgs.graphviz
-              packages.python-hcl2
-              python3.pkgs.gitpython
-              python3.pkgs.clickclick
-              python3.pkgs.graphviz
-              python3.pkgs.requests
-              python3.pkgs.tqdm
-              python3.pkgs.numpy
-              python3.pkgs.debugpy
-              python3.pkgs.ipaddr
-            ];
-
+          terravision = mkPoetryApplication {
+            projectDir = self;
           };
           default = self.packages.${system}.terravision;
         };

@@ -73,41 +73,28 @@
         "type": "github"
       }
     },
-    "nixpkgs_2": {
-      "locked": {
-        "lastModified": 1709234961,
-        "narHash": "sha256-75VMyuB5we3ljeFqUMtmrnRngnu6gCgT19+qxuJwKW0=",
-        "owner": "NixOS",
-        "repo": "nixpkgs",
-        "rev": "c45e6f9dacbe6c67c58a8791162cbd7e376692fa",
-        "type": "github"
-      },
-      "original": {
-        "owner": "NixOS",
-        "ref": "master",
-        "repo": "nixpkgs",
-        "type": "github"
-      }
-    },
     "poetry2nix": {
       "inputs": {
         "flake-utils": "flake-utils_2",
         "nix-github-actions": "nix-github-actions",
-        "nixpkgs": "nixpkgs_2",
+        "nixpkgs": [
+          "nixpkgs"
+        ],
         "systems": "systems_3",
         "treefmt-nix": "treefmt-nix"
       },
       "locked": {
-        "lastModified": 1708589824,
-        "narHash": "sha256-2GOiFTkvs5MtVF65sC78KNVxQSmsxtk0WmV1wJ9V2ck=",
-        "owner": "nix-community",
+        "lastModified": 1709227639,
+        "narHash": "sha256-GlNtTmi3Kw1ffZ07XpJjVLInuUicKU08no7PMa4iM7U=",
+        "owner": "danieroux",
         "repo": "poetry2nix",
-        "rev": "3c92540611f42d3fb2d0d084a6c694cd6544b609",
+        "rev": "bb79e50d3e924229259e6291e6b3e8d3814a5725",
         "type": "github"
       },
       "original": {
-        "id": "poetry2nix",
-        "type": "indirect"
+        "owner": "danieroux",
+        "repo": "poetry2nix",
+        "type": "github"
       }
     },
     "root": {
