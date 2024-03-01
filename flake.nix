@@ -37,13 +37,14 @@
 
           terravision = mkPoetryApplication {
             projectDir = self;
+            propagatedBuildInputs = [ pkgs.git pkgs.graphviz pkgs.terraform ];
           };
           default = self.packages.${system}.terravision;
         };
 
         devShells.default = pkgs.mkShell {
           inputsFrom = [ self.packages.${system}.terravision ];
-          packages = [ pkgs.poetry pkgs.graphviz pkgs.terraform ];
+          packages = [ pkgs.poetry ];
         };
       });
 }
