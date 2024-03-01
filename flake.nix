@@ -3,18 +3,23 @@
 
   inputs = {
     flake-utils.url = "github:numtide/flake-utils";
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
-        poetry2nix = {
-          url = "github:danieroux/poetry2nix";
-          inputs.nixpkgs.follows = "nixpkgs";
-        };
+
+    nixpkgs.url = "github:danieroux/nixpkgs";
+    # nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+
+    poetry2nix = {
+      # Awaiting: https://github.com/nix-community/poetry2nix/pull/1543
+      url = "github:danieroux/poetry2nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
-  outputs = { self, nixpkgs, flake-utils, poetry2nix }:
+  outputs = { self, nixpkgs, flake-utils, poetry2nix } @ inputs:
     flake-utils.lib.eachDefaultSystem (system:
       let
-       inherit (pkgs) python3;
-        inherit (poetry2nix.lib.mkPoetry2Nix { inherit pkgs; }) mkPoetryApplication;
+        inherit (pkgs) python3;
+        # https://stackoverflow.com/a/77838280
+        poetry2nix = inputs.poetry2nix.lib.mkPoetry2Nix { inherit pkgs; };
         #  Need the unfree for terraform
         pkgs = import nixpkgs { inherit system; config.allowUnfree = true; };
       in
@@ -24,21 +29,21 @@
 
         packages = {
 
-          python-hcl2 = import ./python-hcl2.nix {
-            setuptools = python3.pkgs.setuptools;
-            setuptools-scm = python3.pkgs.setuptools-scm;
-            lib = python3.pkgs.lib;
-            buildPythonPackage = python3.pkgs.buildPythonPackage;
-            fetchPypi = python3.pkgs.fetchPypi;
-            lark = python3.pkgs.lark;
-            nose = python3.pkgs.nose;
-            pythonOlder = python3.pkgs.pythonOlder;
-          };
-
-          terravision = mkPoetryApplication {
+          terravision = poetry2nix.mkPoetryApplication {
             projectDir = self;
             propagatedBuildInputs = [ pkgs.git pkgs.graphviz pkgs.terraform ];
+            overrides = poetry2nix.overrides.withDefaults (final: prev: {
+              python-hcl2 = pkgs.python3.pkgs.python-hcl2;
+            });
+
+            # Or, use the wheel
+            #            overrides = poetry2nix.overrides.withDefaults (final: prev: {
+            #              python-hcl2 = prev.python-hcl2.override {
+            #                preferWheel = true;
+            #              };
+            #            });
           };
+
           default = self.packages.${system}.terravision;
         };
 
