@@ -20,8 +20,8 @@
         packages = {
 
           python-hcl2 = import ./python-hcl2.nix {
-          setuptools = python3.pkgs.setuptools;
-           setuptools-scm = python3.pkgs.setuptools-scm;
+            setuptools = python3.pkgs.setuptools;
+            setuptools-scm = python3.pkgs.setuptools-scm;
             lib = python3.pkgs.lib;
             buildPythonPackage = python3.pkgs.buildPythonPackage;
             fetchPypi = python3.pkgs.fetchPypi;
@@ -39,16 +39,19 @@
             nativeBuildInputs = with python3.pkgs; [
               setuptools
             ];
-            propagatedBuildInputs = with python3.pkgs; [
-              clickclick
-              gitpython
-              graphviz
-              requests
-              tqdm
+            propagatedBuildInputs = [
+              pkgs.git
+              pkgs.terraform
+              pkgs.graphviz
+              python3.pkgs.gitpython
+              python3.pkgs.clickclick
+              python3.pkgs.graphviz
+              python3.pkgs.requests
+              python3.pkgs.tqdm
               packages.python-hcl2
-              numpy
-              debugpy
-              ipaddr
+              python3.pkgs.numpy
+              python3.pkgs.debugpy
+              python3.pkgs.ipaddr
             ];
 
           };
